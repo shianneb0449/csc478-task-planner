@@ -24,7 +24,18 @@ public class Main extends Application {
         Button editButton = new Button("Edit");
         Button deleteButton = new Button("Delete");
         Button completeButton = new Button("Mark Complete");
+        
+        addButton.setOnAction(e -> {
+            javafx.scene.control.TextInputDialog dialog = new javafx.scene.control.TextInputDialog();
+            dialog.setTitle("Add Task");
+            dialog.setHeaderText("Enter task title");
+            dialog.setContentText("Title:");
 
+            dialog.showAndWait().ifPresent(title -> {
+                System.out.println("New task title: " + title);
+            });
+        });
+        
         ToolBar toolBar = new ToolBar(addButton, editButton, deleteButton, completeButton);
 
         BorderPane root = new BorderPane();
