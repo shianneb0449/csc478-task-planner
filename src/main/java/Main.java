@@ -11,15 +11,28 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        TableView<String> tableView = new TableView<>();
+    	TableView<TaskRow> tableView = new TableView<>();
 
-        TableColumn<String, String> titleColumn = new TableColumn<>("Title");
-        TableColumn<String, String> dueColumn = new TableColumn<>("Due Date");
-        TableColumn<String, String> priorityColumn = new TableColumn<>("Priority");
-        TableColumn<String, String> completedColumn = new TableColumn<>("Completed");
+    	TableColumn<TaskRow, String> titleColumn = new TableColumn<>("Title");
+    	titleColumn.setCellValueFactory(cell -> cell.getValue().titleProperty());
 
+    	TableColumn<TaskRow, String> dueColumn = new TableColumn<>("Due Date");
+    	dueColumn.setCellValueFactory(cell -> cell.getValue().dueDateProperty());
+
+    	TableColumn<TaskRow, String> priorityColumn = new TableColumn<>("Priority");
+    	priorityColumn.setCellValueFactory(cell -> cell.getValue().priorityProperty());
+
+    	TableColumn<TaskRow, Boolean> completedColumn = new TableColumn<>("Completed");
+    	completedColumn.setCellValueFactory(cell -> cell.getValue().completedProperty());
+    	
         tableView.getColumns().addAll(titleColumn, dueColumn, priorityColumn, completedColumn);
 
+        tableView.getItems().addAll(
+                new TaskRow("pack lunch", "2026-03-05", "High", false),
+                new TaskRow("fold laundry", "2026-03-06", "Medium", true),
+                new TaskRow("clean gutters", "", "Low", false)
+        );
+        
         Button addButton = new Button("Add");
         Button editButton = new Button("Edit");
         Button deleteButton = new Button("Delete");
@@ -32,7 +45,9 @@ public class Main extends Application {
             dialog.setContentText("Title:");
 
             dialog.showAndWait().ifPresent(title -> {
-                System.out.println("New task title: " + title);
+                if (!title.trim().isEmpty()) {
+                    tableView.getItems().add(new TaskRow(title, "", "Medium", false));
+                }
             });
         });
         
