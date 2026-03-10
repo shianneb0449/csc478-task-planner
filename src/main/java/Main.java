@@ -6,6 +6,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.ButtonType;
+import javafx.scene.layout.GridPane;
+import java.time.LocalDate;
 
 public class Main extends Application {
 
@@ -39,15 +46,46 @@ public class Main extends Application {
         Button completeButton = new Button("Mark Complete");
         
         addButton.setOnAction(e -> {
-            javafx.scene.control.TextInputDialog dialog = new javafx.scene.control.TextInputDialog();
+            Dialog<TaskRow> dialog = new Dialog<>();
             dialog.setTitle("Add Task");
-            dialog.setHeaderText("Enter task title");
-            dialog.setContentText("Title:");
+            dialog.setHeaderText("Enter task details");
 
-            dialog.showAndWait().ifPresent(title -> {
-                if (!title.trim().isEmpty()) {
-                    tableView.getItems().add(new TaskRow(title, "", "Medium", false));
+            ButtonType saveButtonType = new ButtonType("Save", javafx.scene.control.ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+
+            GridPane grid = new GridPane();
+            grid.setHgap(10);
+            grid.setVgap(10);
+
+            javafx.scene.control.TextField titleField = new javafx.scene.control.TextField();
+            DatePicker dueDatePicker = new DatePicker();
+            ComboBox<String> priorityBox = new ComboBox<>();
+            priorityBox.getItems().addAll("Low", "Medium", "High");
+            priorityBox.setValue("Medium");
+
+            grid.add(new Label("Title:"), 0, 0);
+            grid.add(titleField, 1, 0);
+            grid.add(new Label("Due Date:"), 0, 1);
+            grid.add(dueDatePicker, 1, 1);
+            grid.add(new Label("Priority:"), 0, 2);
+            grid.add(priorityBox, 1, 2);
+
+            dialog.getDialogPane().setContent(grid);
+
+            dialog.setResultConverter(dialogButton -> {
+                if (dialogButton == saveButtonType) {
+                    String title = titleField.getText().trim();
+                    if (!title.isEmpty()) {
+                        LocalDate dueDate = dueDatePicker.getValue();
+                        String dueDateText = (dueDate == null) ? "" : dueDate.toString();
+                        return new TaskRow(title, dueDateText, priorityBox.getValue(), false);
+                    }
                 }
+                return null;
+            });
+
+            dialog.showAndWait().ifPresent(task -> {
+                tableView.getItems().add(task);
             });
         });
         

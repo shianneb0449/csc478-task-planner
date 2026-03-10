@@ -3,6 +3,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+
 public class TaskRow {
     private final StringProperty title = new SimpleStringProperty();
     private final StringProperty dueDate = new SimpleStringProperty();
