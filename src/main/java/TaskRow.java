@@ -32,4 +32,36 @@ public class TaskRow {
     public BooleanProperty completedProperty() {
         return completed;
     }
+    
+    public String getTitle() {
+        return title.get();
+    }
+
+    public void setTitle(String title) {
+        this.title.set(title);
+    }
+
+    public String getDueDate() {
+        return dueDate.get();
+    }
+
+    public void setDueDate(String dueDate) {
+        this.dueDate.set(dueDate);
+    }
+
+    public String getPriority() {
+        return priority.get();
+    }
+
+    public void setPriority(String priority) {
+        this.priority.set(priority);
+    }
+
+    public boolean isCompleted() {
+        return completed.get();
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed.set(completed);
+    }
 }

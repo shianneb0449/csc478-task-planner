@@ -89,6 +89,66 @@ public class Main extends Application {
             });
         });
         
+        editButton.setOnAction(e -> {
+            TaskRow selectedTask = tableView.getSelectionModel().getSelectedItem();
+
+            if (selectedTask == null) {
+                return;
+            }
+
+            Dialog<Void> dialog = new Dialog<>();
+            dialog.setTitle("Edit Task");
+            dialog.setHeaderText("Modify task details");
+
+            ButtonType saveButtonType = new ButtonType("Save", javafx.scene.control.ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+
+            GridPane grid = new GridPane();
+            grid.setHgap(10);
+            grid.setVgap(10);
+
+            javafx.scene.control.TextField titleField = new javafx.scene.control.TextField(selectedTask.getTitle());
+
+            DatePicker dueDatePicker = new DatePicker(
+                selectedTask.getDueDate().isEmpty() ? null : LocalDate.parse(selectedTask.getDueDate())
+            );
+
+            ComboBox<String> priorityBox = new ComboBox<>();
+            priorityBox.getItems().addAll("Low", "Medium", "High");
+            priorityBox.setValue(selectedTask.getPriority());
+
+            grid.add(new Label("Title:"), 0, 0);
+            grid.add(titleField, 1, 0);
+            grid.add(new Label("Due Date:"), 0, 1);
+            grid.add(dueDatePicker, 1, 1);
+            grid.add(new Label("Priority:"), 0, 2);
+            grid.add(priorityBox, 1, 2);
+
+            dialog.getDialogPane().setContent(grid);
+
+            dialog.setResultConverter(dialogButton -> {
+                if (dialogButton == saveButtonType) {
+                    String title = titleField.getText().trim();
+
+                    if (!title.isEmpty()) {
+                        selectedTask.setTitle(title);
+
+                        String dueDateText = (dueDatePicker.getValue() == null)
+                                ? ""
+                                : dueDatePicker.getValue().toString();
+                        selectedTask.setDueDate(dueDateText);
+
+                        selectedTask.setPriority(priorityBox.getValue());
+
+                        tableView.refresh();
+                    }
+                }
+                return null;
+            });
+
+            dialog.showAndWait();
+        });
+        
         ToolBar toolBar = new ToolBar(addButton, editButton, deleteButton, completeButton);
 
         BorderPane root = new BorderPane();
