@@ -157,6 +157,15 @@ public class Main extends Application {
             }
         });
         
+        completeButton.setOnAction(e -> {
+            TaskRow selectedTask = tableView.getSelectionModel().getSelectedItem();
+
+            if (selectedTask != null) {
+                selectedTask.setCompleted(!selectedTask.isCompleted());
+                tableView.refresh();
+            }
+        });
+        
         ToolBar toolBar = new ToolBar(addButton, editButton, deleteButton, completeButton);
 
         BorderPane root = new BorderPane();
