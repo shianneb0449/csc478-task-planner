@@ -149,6 +149,14 @@ public class Main extends Application {
             dialog.showAndWait();
         });
         
+        deleteButton.setOnAction(e -> {
+            TaskRow selectedTask = tableView.getSelectionModel().getSelectedItem();
+
+            if (selectedTask != null) {
+                tableView.getItems().remove(selectedTask);
+            }
+        });
+        
         ToolBar toolBar = new ToolBar(addButton, editButton, deleteButton, completeButton);
 
         BorderPane root = new BorderPane();
