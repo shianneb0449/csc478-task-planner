@@ -34,11 +34,15 @@ public class Main extends Application {
     	
         tableView.getColumns().addAll(titleColumn, dueColumn, priorityColumn, completedColumn);
 
-        tableView.getItems().addAll(
-                new TaskRow("pack lunch", "2026-03-05", "High", false),
-                new TaskRow("fold laundry", "2026-03-06", "Medium", true),
-                new TaskRow("clean gutters", "", "Low", false)
-        );
+        tableView.getItems().addAll(TaskStorage.loadTasks());
+
+        if (tableView.getItems().isEmpty()) {
+            tableView.getItems().addAll(
+                    new TaskRow("pack lunch", "2026-03-25", "High", false),
+                    new TaskRow("fold laundry", "2026-03-16", "Medium", true),
+                    new TaskRow("clean gutters", "", "Low", false)
+            );
+        }
         
         Button addButton = new Button("Add");
         Button editButton = new Button("Edit");
@@ -86,6 +90,7 @@ public class Main extends Application {
 
             dialog.showAndWait().ifPresent(task -> {
                 tableView.getItems().add(task);
+                TaskStorage.saveTasks(tableView.getItems());
             });
         });
         
@@ -141,6 +146,7 @@ public class Main extends Application {
                         selectedTask.setPriority(priorityBox.getValue());
 
                         tableView.refresh();
+                        TaskStorage.saveTasks(tableView.getItems());                    
                     }
                 }
                 return null;
@@ -154,6 +160,7 @@ public class Main extends Application {
 
             if (selectedTask != null) {
                 tableView.getItems().remove(selectedTask);
+                TaskStorage.saveTasks(tableView.getItems());
             }
         });
         
@@ -163,6 +170,7 @@ public class Main extends Application {
             if (selectedTask != null) {
                 selectedTask.setCompleted(!selectedTask.isCompleted());
                 tableView.refresh();
+                TaskStorage.saveTasks(tableView.getItems());
             }
         });
         
