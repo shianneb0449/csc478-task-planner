@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.GridPane;
 import java.time.LocalDate;
+import javafx.scene.control.Alert;
 
 public class Main extends Application {
 
@@ -97,10 +98,11 @@ public class Main extends Application {
         editButton.setOnAction(e -> {
             TaskRow selectedTask = tableView.getSelectionModel().getSelectedItem();
 
-            if (selectedTask == null) {
+            if(selectedTask == null) {
+                showNoSelectionAlert();
                 return;
             }
-
+            
             Dialog<Void> dialog = new Dialog<>();
             dialog.setTitle("Edit Task");
             dialog.setHeaderText("Modify task details");
@@ -158,20 +160,26 @@ public class Main extends Application {
         deleteButton.setOnAction(e -> {
             TaskRow selectedTask = tableView.getSelectionModel().getSelectedItem();
 
-            if (selectedTask != null) {
-                tableView.getItems().remove(selectedTask);
-                TaskStorage.saveTasks(tableView.getItems());
+            if(selectedTask == null) {
+                showNoSelectionAlert();
+                return;
             }
+
+            tableView.getItems().remove(selectedTask);
+            TaskStorage.saveTasks(tableView.getItems());
         });
         
         completeButton.setOnAction(e -> {
             TaskRow selectedTask = tableView.getSelectionModel().getSelectedItem();
 
-            if (selectedTask != null) {
-                selectedTask.setCompleted(!selectedTask.isCompleted());
-                tableView.refresh();
-                TaskStorage.saveTasks(tableView.getItems());
+            if (selectedTask == null) {
+                showNoSelectionAlert();
+                return;
             }
+
+            selectedTask.setCompleted(!selectedTask.isCompleted());
+            tableView.refresh();
+            TaskStorage.saveTasks(tableView.getItems());
         });
         
         ToolBar toolBar = new ToolBar(addButton, editButton, deleteButton, completeButton);
@@ -187,7 +195,16 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    private void showNoSelectionAlert() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("No Task Selected");
+        alert.setHeaderText(null);
+        alert.setContentText("Please select a task first.");
+        alert.showAndWait();
+    }
+    
     public static void main(String[] args) {
         launch(args);
     }
+    
 }
