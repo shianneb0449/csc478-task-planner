@@ -160,13 +160,22 @@ public class Main extends Application {
         deleteButton.setOnAction(e -> {
             TaskRow selectedTask = tableView.getSelectionModel().getSelectedItem();
 
-            if(selectedTask == null) {
+            if (selectedTask == null) {
                 showNoSelectionAlert();
                 return;
             }
 
-            tableView.getItems().remove(selectedTask);
-            TaskStorage.saveTasks(tableView.getItems());
+            Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmAlert.setTitle("Delete Task");
+            confirmAlert.setHeaderText(null);
+            confirmAlert.setContentText("Are you sure you want to delete this task?");
+
+            confirmAlert.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK) {
+                    tableView.getItems().remove(selectedTask);
+                    TaskStorage.saveTasks(tableView.getItems());
+                }
+            });
         });
         
         completeButton.setOnAction(e -> {
