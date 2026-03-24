@@ -5,3 +5,5 @@ CSC 478 Capstone Project. Team built java task planner application.
 - [Branching Rules](docs/branching.md)
 - [Scope Statement](docs/scope-statement.md)
 
+## Front end
+- [Front end status overview](docs/UI-status-overview.md)
