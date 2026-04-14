@@ -1,105 +1,71 @@
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.util.ArrayList;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.StringProperty;
 
-public class TaskPlanner extends JFrame {
+public class TaskRow {
 
-    private DefaultListModel<String> taskListModel;
-    private JList<String> taskList;
-    private JTextField taskInput;
-    private final String FILE_NAME = "tasks.txt";
+    private final StringProperty title;
+    private final StringProperty dueDate;
+    private final StringProperty priority;
+    private final BooleanProperty completed;
 
-    public TaskPlanner() {
-        setTitle("Personal Task Planner");
-        setSize(400, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-
-        // Initialize components
-        taskListModel = new DefaultListModel<>();
-        taskList = new JList<>(taskListModel);
-        JScrollPane scrollPane = new JScrollPane(taskList);
-
-        taskInput = new JTextField();
-
-        JButton addButton = new JButton("Add Task");
-        JButton deleteButton = new JButton("Delete Task");
-
-        // Layout
-        setLayout(new BorderLayout());
-        add(scrollPane, BorderLayout.CENTER);
-
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.add(taskInput, BorderLayout.CENTER);
-
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(addButton);
-        buttonPanel.add(deleteButton);
-
-        bottomPanel.add(buttonPanel, BorderLayout.SOUTH);
-        add(bottomPanel, BorderLayout.SOUTH);
-
-        // Load tasks from file
-        loadTasks();
-
-        // Add Task Action
-        addButton.addActionListener(e -> addTask());
-
-        // Delete Task Action
-        deleteButton.addActionListener(e -> deleteTask());
-
-        setVisible(true);
+    public TaskRow(String title, String dueDate, String priority, boolean completed) {
+        this.title = new SimpleStringProperty(title);
+        this.dueDate = new SimpleStringProperty(dueDate);
+        this.priority = new SimpleStringProperty(priority);
+        this.completed = new SimpleBooleanProperty(completed);
     }
 
-    private void addTask() {
-        String task = taskInput.getText().trim();
-        if (!task.isEmpty()) {
-            taskListModel.addElement(task);
-            taskInput.setText("");
-            saveTasks();
-        } else {
-            JOptionPane.showMessageDialog(this, "Task cannot be empty!");
-        }
+    // Title
+    public String getTitle() {
+        return title.get();
     }
 
-    private void deleteTask() {
-        int selectedIndex = taskList.getSelectedIndex();
-        if (selectedIndex != -1) {
-            taskListModel.remove(selectedIndex);
-            saveTasks();
-        } else {
-            JOptionPane.showMessageDialog(this, "Select a task to delete!");
-        }
+    public void setTitle(String value) {
+        title.set(value);
     }
 
-    private void saveTasks() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
-            for (int i = 0; i < taskListModel.size(); i++) {
-                writer.write(taskListModel.getElementAt(i));
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error saving tasks!");
-        }
+    public StringProperty titleProperty() {
+        return title;
     }
 
-    private void loadTasks() {
-        File file = new File(FILE_NAME);
-        if (!file.exists()) return;
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                taskListModel.addElement(line);
-            }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error loading tasks!");
-        }
+    // Due Date
+    public String getDueDate() {
+        return dueDate.get();
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(TaskPlanner::new);
+    public void setDueDate(String value) {
+        dueDate.set(value);
+    }
+
+    public StringProperty dueDateProperty() {
+        return dueDate;
+    }
+
+    // Priority
+    public String getPriority() {
+        return priority.get();
+    }
+
+    public void setPriority(String value) {
+        priority.set(value);
+    }
+
+    public StringProperty priorityProperty() {
+        return priority;
+    }
+
+    // Completed
+    public boolean isCompleted() {
+        return completed.get();
+    }
+
+    public void setCompleted(boolean value) {
+        completed.set(value);
+    }
+
+    public BooleanProperty completedProperty() {
+        return completed;
     }
 }
