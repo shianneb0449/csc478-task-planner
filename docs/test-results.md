@@ -81,3 +81,23 @@ I tested how the app handles different file situations.
 Overall, the front-end functionality is working as intended. All core features behave correctly, and the app handles normal user interactions well.
 
 The only issue found during testing is that corrupt JSON files are not handled gracefully, which causes the application to crash. This would need to be addressed to fully meet the reliability requirements.
+
+
+
+---
+
+## Backend / File Storage Testing
+
+I tested the updated file-based storage system that uses `tasks.txt` instead of `tasks.JSON.`
+
+- Tasks are saved correctly to the file and remain after restarting the application  
+- When `tasks.txt` is deleted, the application still launches normally and the file is recreated after a task is added or modified  
+- When the file is empty, the application loads without errors and displays default or no tasks  
+- When the file contains invalid or malformed data, those lines are ignored and the application continues running without crashing  
+- Tasks containing punctuation and special characters were saved and loaded correctly  
+
+---
+
+## Updated Summary
+
+The application continues to meet all functional requirements. The updated file-based storage system works correctly and improves reliability by handling missing, empty, and malformed data without crashing.
