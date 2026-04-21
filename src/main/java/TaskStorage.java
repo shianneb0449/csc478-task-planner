@@ -26,7 +26,8 @@ public class TaskStorage {
             ));
         }
 
-        try(FileWriter writer = new FileWriter(FILE_PATH)) {
+        FILE_PATH.getParent().toFile().mkdirs();
+        try(FileWriter writer = new FileWriter(FILE_PATH.toFile())) {
             gson.toJson(taskDataList, writer);
         } catch (IOException e) {
             e.printStackTrace();
@@ -34,7 +35,7 @@ public class TaskStorage {
     }
 
     public static List<TaskRow> loadTasks() {
-        try(FileReader reader = new FileReader(FILE_PATH)) {
+        try(FileReader reader = new FileReader(FILE_PATH.toFile())) {
             List<TaskData> taskDataList = gson.fromJson(reader, new TypeToken<List<TaskData>>() {}.getType());
 
             List<TaskRow> tasks = new ArrayList<>();
