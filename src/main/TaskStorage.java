@@ -4,7 +4,8 @@ import java.util.List;
 
 public class TaskStorage {
 
-    private static final String FILE_NAME = "tasks.txt";
+    private static final Path FILE_PATH =
+            Path.of(System.getProperty("user.home"), "csc478-task-planner", "tasks.txt");
 
     // Save tasks to file
     public static void saveTasks(List<TaskRow> tasks) {
